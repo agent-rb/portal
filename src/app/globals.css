@@ -1,0 +1,340 @@
+@import "tailwindcss";
+
+/* ── Colors can crossfade when the theme changes ─ */
+@property --bg-primary { syntax: "<color>"; inherits: true; initial-value: #ffffff; }
+@property --bg-secondary { syntax: "<color>"; inherits: true; initial-value: #f7f7f8; }
+@property --bg-elevated { syntax: "<color>"; inherits: true; initial-value: #ffffff; }
+@property --text-primary { syntax: "<color>"; inherits: true; initial-value: #0d0d0d; }
+@property --text-secondary { syntax: "<color>"; inherits: true; initial-value: #6e6e80; }
+@property --text-tertiary { syntax: "<color>"; inherits: true; initial-value: #5c5c6e; }
+@property --border { syntax: "<color>"; inherits: true; initial-value: #e5e5e5; }
+@property --accent { syntax: "<color>"; inherits: true; initial-value: #6b5ce7; }
+@property --accent-hover { syntax: "<color>"; inherits: true; initial-value: #7c6df0; }
+@property --hero-glow { syntax: "<color>"; inherits: true; initial-value: rgba(70, 88, 130, 0.14); }
+@property --hero-glow-alt { syntax: "<color>"; inherits: true; initial-value: rgba(90, 108, 145, 0.1); }
+@property --bubble-highlight { syntax: "<color>"; inherits: true; initial-value: rgba(255, 255, 255, 0.95); }
+@property --bubble-core { syntax: "<color>"; inherits: true; initial-value: rgba(48, 62, 88, 0.08); }
+@property --bubble-rim { syntax: "<color>"; inherits: true; initial-value: rgba(36, 48, 74, 0.32); }
+@property --bubble-edge { syntax: "<color>"; inherits: true; initial-value: rgba(28, 38, 62, 0.22); }
+@property --bubble-shade { syntax: "<color>"; inherits: true; initial-value: rgba(18, 28, 48, 0.1); }
+@property --instrument-line { syntax: "<color>"; inherits: true; initial-value: rgba(79, 53, 196, 0.42); }
+@property --instrument-sweep { syntax: "<color>"; inherits: true; initial-value: rgba(107, 92, 231, 0.16); }
+
+/* ── Light mode (default) ──────────────────── */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f7f8;
+  --bg-elevated: #ffffff;
+  --text-primary: #0d0d0d;
+  --text-secondary: #6e6e80;
+  --text-tertiary: #5c5c6e;
+  --border: #e5e5e5;
+  --accent: #6b5ce7;
+  --accent-hover: #7c6df0;
+  --mark: #e10600;
+  --glow: rgba(107, 92, 231, 0.16);
+  --hero-glow: rgba(70, 88, 130, 0.14);
+  --hero-glow-alt: rgba(90, 108, 145, 0.1);
+  --bubble-highlight: rgba(255, 255, 255, 0.95);
+  --bubble-core: rgba(48, 62, 88, 0.08);
+  --bubble-rim: rgba(36, 48, 74, 0.32);
+  --bubble-edge: rgba(28, 38, 62, 0.22);
+  --bubble-shade: rgba(18, 28, 48, 0.1);
+  --instrument-line: rgba(79, 53, 196, 0.42);
+  --instrument-grid: rgba(91, 56, 214, 0.07);
+  --instrument-sweep: rgba(107, 92, 231, 0.16);
+  color-scheme: light;
+}
+
+/* ── Dark mode ─────────────────────────────── */
+.dark {
+  --bg-primary: #050507;
+  --bg-secondary: #0c0c10;
+  --bg-elevated: #16161d;
+  --text-primary: #ececf1;
+  --text-secondary: #8e8ea0;
+  --text-tertiary: #565669;
+  --border: #2b2b3b;
+  --accent: #7c6df0;
+  --accent-hover: #9b8afb;
+  --mark: #ff2d2d;
+  --glow: rgba(124, 109, 240, 0.18);
+  --hero-glow: rgba(72, 92, 150, 0.2);
+  --hero-glow-alt: rgba(48, 64, 110, 0.16);
+  --bubble-highlight: rgba(255, 255, 255, 0.55);
+  --bubble-core: rgba(110, 128, 168, 0.14);
+  --bubble-rim: rgba(198, 208, 232, 0.38);
+  --bubble-edge: rgba(214, 222, 242, 0.24);
+  --bubble-shade: rgba(0, 0, 0, 0.38);
+  --instrument-line: rgba(198, 188, 255, 0.55);
+  --instrument-grid: rgba(167, 150, 255, 0.09);
+  --instrument-sweep: rgba(167, 139, 250, 0.22);
+  color-scheme: dark;
+}
+
+/* ── Tailwind theme ────────────────────────── */
+@theme inline {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-mark: var(--mark);
+  --color-glow: var(--glow);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+/* ── Base ──────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  transition:
+    --bg-primary 0.55s ease,
+    --bg-secondary 0.55s ease,
+    --bg-elevated 0.55s ease,
+    --text-primary 0.55s ease,
+    --text-secondary 0.55s ease,
+    --text-tertiary 0.55s ease,
+    --border 0.55s ease,
+    --accent 0.55s ease,
+    --accent-hover 0.55s ease,
+    --hero-glow 0.55s ease,
+    --hero-glow-alt 0.55s ease,
+    --bubble-highlight 0.55s ease,
+    --bubble-core 0.55s ease,
+    --bubble-rim 0.55s ease,
+    --bubble-edge 0.55s ease,
+    --bubble-shade 0.55s ease,
+    --instrument-line 0.55s ease,
+    --instrument-sweep 0.55s ease;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: #fff; }
+
+/* ── Floating bubbles ─────────────────────── */
+.hero-atmosphere {
+  background:
+    radial-gradient(ellipse 60% 45% at 50% -10%, var(--hero-glow), transparent),
+    radial-gradient(ellipse 40% 30% at 80% 50%, var(--hero-glow-alt), transparent);
+  animation: scene-fade-in 1.4s ease both;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--bubble-edge);
+  opacity: 0;
+  animation: bubble-float linear infinite;
+  pointer-events: auto;
+  cursor: pointer;
+  background:
+    radial-gradient(ellipse 18% 12% at 32% 26%, var(--bubble-highlight), transparent 70%),
+    radial-gradient(circle at 72% 78%, var(--bubble-shade), transparent 48%),
+    radial-gradient(circle at 50% 48%, var(--bubble-core) 0%, transparent 74%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--bubble-rim) 80%, transparent),
+    inset 0 -18px 28px var(--bubble-shade);
+}
+:root .bubble[data-tone="0"] {
+  --bubble-core: rgba(28, 98, 186, 0.34);
+  --bubble-rim: rgba(18, 74, 160, 0.62);
+  --bubble-edge: rgba(16, 66, 140, 0.46);
+  --bubble-shade: rgba(12, 40, 96, 0.18);
+}
+:root .bubble[data-tone="1"] {
+  --bubble-core: rgba(8, 138, 142, 0.32);
+  --bubble-rim: rgba(4, 112, 118, 0.58);
+  --bubble-edge: rgba(4, 100, 106, 0.42);
+  --bubble-shade: rgba(4, 72, 76, 0.16);
+}
+:root .bubble[data-tone="2"] {
+  --bubble-core: rgba(186, 118, 18, 0.3);
+  --bubble-rim: rgba(156, 92, 8, 0.56);
+  --bubble-edge: rgba(140, 82, 8, 0.4);
+  --bubble-shade: rgba(110, 64, 8, 0.14);
+}
+:root .bubble[data-tone="3"] {
+  --bubble-core: rgba(58, 66, 80, 0.26);
+  --bubble-rim: rgba(36, 42, 54, 0.52);
+  --bubble-edge: rgba(32, 38, 48, 0.38);
+  --bubble-shade: rgba(16, 20, 28, 0.14);
+}
+.dark .bubble[data-tone="0"] {
+  --bubble-core: rgba(70, 140, 230, 0.38);
+  --bubble-rim: rgba(150, 196, 255, 0.62);
+  --bubble-edge: rgba(176, 210, 255, 0.4);
+  --bubble-shade: rgba(6, 16, 40, 0.45);
+}
+.dark .bubble[data-tone="1"] {
+  --bubble-core: rgba(32, 190, 186, 0.36);
+  --bubble-rim: rgba(120, 236, 228, 0.58);
+  --bubble-edge: rgba(150, 240, 232, 0.38);
+  --bubble-shade: rgba(2, 28, 30, 0.45);
+}
+.dark .bubble[data-tone="2"] {
+  --bubble-core: rgba(220, 158, 48, 0.36);
+  --bubble-rim: rgba(244, 196, 96, 0.6);
+  --bubble-edge: rgba(248, 210, 120, 0.4);
+  --bubble-shade: rgba(40, 22, 2, 0.48);
+}
+.dark .bubble[data-tone="3"] {
+  --bubble-core: rgba(168, 178, 198, 0.24);
+  --bubble-rim: rgba(214, 222, 236, 0.52);
+  --bubble-edge: rgba(220, 228, 242, 0.34);
+  --bubble-shade: rgba(0, 0, 0, 0.48);
+}
+.splash {
+  position: absolute;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.splash-ring,
+.splash-drop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+}
+.splash-ring {
+  width: var(--splash-size);
+  height: var(--splash-size);
+  margin-left: calc(var(--splash-size) / -2);
+  margin-top: calc(var(--splash-size) / -2);
+  border: 1.5px solid var(--splash);
+  animation: splash-ring 0.7s ease-out forwards;
+}
+.splash-drop {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--splash);
+  animation: splash-drop 0.65s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+@keyframes splash-ring {
+  0%   { transform: scale(0.4); opacity: 0.9; }
+  100% { transform: scale(7); opacity: 0; }
+}
+@keyframes splash-drop {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.35); opacity: 0; }
+}
+@keyframes bubble-float {
+  0%   { opacity: 0; transform: translateY(0) scale(0.45); }
+  18%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-110vh) scale(1.05); }
+}
+
+/* ── Instrument ───────────────────────────── */
+.instrument {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  animation: scene-fade-in 1.8s ease both;
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--instrument-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--instrument-grid) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at center, #000 15%, transparent 72%);
+}
+.instrument-svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(108vmin, 980px);
+  height: min(108vmin, 980px);
+  translate: -50% -50%;
+  overflow: visible;
+}
+.instrument-spin,
+.instrument-spin-reverse,
+.instrument-sweep {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.instrument-spin { animation: spin 52s linear infinite; }
+.instrument-spin-reverse { animation: spin 36s linear infinite reverse; }
+.instrument-sweep { animation: spin 16s linear infinite; }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.scan-line {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--instrument-line), transparent);
+  box-shadow: 0 0 16px var(--instrument-sweep);
+  animation: scan 12s ease-in-out infinite;
+}
+@keyframes scan {
+  0%   { transform: translateY(-18vh); opacity: 0; }
+  14%  { opacity: 0.55; }
+  86%  { opacity: 0.35; }
+  100% { transform: translateY(88vh); opacity: 0; }
+}
+.hud-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: var(--instrument-line);
+  border-style: solid;
+  opacity: 0.8;
+}
+.hud-tl { top: 5.25rem; left: 1.5rem; border-width: 1px 0 0 1px; }
+.hud-tr { top: 5.25rem; right: 1.5rem; border-width: 1px 1px 0 0; }
+.hud-bl { bottom: 1.5rem; left: 1.5rem; border-width: 0 0 1px 1px; }
+.hud-br { bottom: 1.5rem; right: 1.5rem; border-width: 0 1px 1px 0; }
+
+/* ── Entrance ─────────────────────────────── */
+@keyframes scene-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up       { animation: fade-in-up 1s ease-out both; }
+.animate-fade-in-up-delay { animation: fade-in-up 1s ease-out 0.15s both; }
+.animate-fade-in-up-delay-2 { animation: fade-in-up 1s ease-out 0.3s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in-up-delay,
+  .animate-fade-in-up-delay-2,
+  .hero-atmosphere,
+  .instrument,
+  .bubble { animation: none !important; opacity: 1; transform: none; }
+  .instrument-spin,
+  .instrument-spin-reverse,
+  .instrument-sweep,
+  .scan-line,
+  .splash-ring,
+  .splash-drop { animation: none !important; }
+  .scan-line,
+  .splash { opacity: 0; }
+}
