@@ -65,6 +65,26 @@ export interface ContentConfig {
       readonly message: string;
     };
   };
+  readonly podcast: {
+    readonly title: string;
+    readonly description: string;
+    readonly subscribe: {
+      readonly youtube: string;
+      readonly spotify: string;
+      readonly apple: string;
+      readonly rss: string;
+    };
+  };
+  readonly explore: {
+    readonly title: string;
+    readonly description: string;
+    readonly placeholder: string;
+    readonly suggestions: ReadonlyArray<{
+      readonly label: string;
+      readonly prompt: string;
+    }>;
+    readonly instructions: string;
+  };
 }
 
 export interface AgentConfig {

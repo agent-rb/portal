@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/config/site";
+import { portalNav } from "@/lib/navigation";
 import { BrandName } from "@/components/brand-name";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
-export function Navbar() {
+export function Navbar({ solid = false }: { solid?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -24,7 +25,7 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-300",
-        scrolled
+        solid || scrolled
           ? "border-b border-border bg-bg-primary/80 backdrop-blur-xl"
           : "bg-transparent",
       )}
@@ -38,7 +39,7 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">
-          {siteConfig.nav.map((item) => (
+          {portalNav().map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -82,7 +83,7 @@ export function Navbar() {
       {menuOpen && (
         <nav className="border-t border-border bg-bg-primary/95 px-6 py-5 backdrop-blur-xl md:hidden">
           <div className="flex flex-col gap-4">
-            {siteConfig.nav.map((item) => (
+            {portalNav().map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

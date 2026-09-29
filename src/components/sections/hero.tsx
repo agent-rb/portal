@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { agentConfig } from "@/config/agents";
 import { contentConfig } from "@/config/content";
 import { BrandName } from "@/components/brand-name";
 
@@ -8,32 +10,70 @@ function burst(parent: HTMLDivElement, bubble: HTMLDivElement) {
   const parentBox = parent.getBoundingClientRect();
   const box = bubble.getBoundingClientRect();
   const style = getComputedStyle(bubble);
+  const cx = box.left - parentBox.left + box.width / 2;
+  const cy = box.top - parentBox.top + box.height / 2;
+  const rimColor = style.getPropertyValue("--bubble-rim").trim();
+  const coreColor = style.getPropertyValue("--bubble-core").trim();
+
   const splash = document.createElement("div");
   splash.className = "splash";
-  splash.style.left = `${box.left - parentBox.left + box.width / 2}px`;
-  splash.style.top = `${box.top - parentBox.top + box.height / 2}px`;
-  splash.style.setProperty("--splash", style.getPropertyValue("--bubble-rim").trim());
-  splash.style.setProperty("--splash-size", `${Math.max(box.width * 0.22, 12)}px`);
+  splash.style.left = `${cx}px`;
+  splash.style.top = `${cy}px`;
+  splash.style.setProperty("--splash", rimColor);
+  splash.style.setProperty("--splash-core", coreColor);
+  splash.style.setProperty("--splash-size", `${Math.max(box.width * 0.3, 16)}px`);
 
-  for (let i = 0; i < 3; i += 1) {
+  // Center flash
+  const flash = document.createElement("span");
+  flash.className = "splash-flash";
+  flash.style.width = `${box.width * 0.6}px`;
+  flash.style.height = `${box.width * 0.6}px`;
+  splash.appendChild(flash);
+
+  // Expanding rings — staggered for a ripple effect
+  for (let i = 0; i < 4; i += 1) {
     const ring = document.createElement("span");
     ring.className = "splash-ring";
-    ring.style.animationDelay = `${i * 0.07}s`;
+    ring.style.animationDelay = `${i * 0.08}s`;
     splash.appendChild(ring);
   }
 
-  for (let i = 0; i < 8; i += 1) {
+  // Drops — varied sizes, gravity-biased
+  const dropCount = 10 + Math.floor(box.width / 20);
+  for (let i = 0; i < dropCount; i += 1) {
     const drop = document.createElement("span");
     drop.className = "splash-drop";
-    const angle = (Math.PI * 2 * i) / 8 + (Math.random() - 0.5) * 0.4;
-    const distance = box.width * (0.35 + Math.random() * 0.45);
+    const angle = (Math.PI * 2 * i) / dropCount + (Math.random() - 0.5) * 0.6;
+    const distance = box.width * (0.3 + Math.random() * 0.7);
+    const size = 3 + Math.random() * 5;
+    drop.style.width = `${size}px`;
+    drop.style.height = `${size}px`;
+    drop.style.margin = `${-size / 2}px 0 0 ${-size / 2}px`;
     drop.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
-    drop.style.setProperty("--dy", `${Math.sin(angle) * distance + distance * 0.25}px`);
+    drop.style.setProperty("--dy", `${Math.sin(angle) * distance + distance * 0.35}px`);
+    drop.style.animationDelay = `${Math.random() * 0.06}s`;
     splash.appendChild(drop);
   }
 
+  // Currency symbols that fly out on pop
+  const symbols = ["$", "£", "€", "¥", "₹", "₿"];
+  const symbolCount = 6 + Math.floor(Math.random() * 4);
+  for (let i = 0; i < symbolCount; i += 1) {
+    const sym = document.createElement("span");
+    sym.className = "splash-symbol";
+    sym.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    const angle = (Math.PI * 2 * i) / symbolCount + (Math.random() - 0.5) * 0.5;
+    const distance = box.width * (0.8 + Math.random() * 1.2);
+    sym.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
+    sym.style.setProperty("--dy", `${Math.sin(angle) * distance * 0.5 - distance * 0.4}px`);
+    sym.style.setProperty("--rot", `${(Math.random() - 0.5) * 280}deg`);
+    sym.style.fontSize = `${20 + Math.random() * 18}px`;
+    sym.style.animationDelay = `${Math.random() * 0.08}s`;
+    splash.appendChild(sym);
+  }
+
   parent.appendChild(splash);
-  window.setTimeout(() => splash.remove(), 800);
+  window.setTimeout(() => splash.remove(), 1100);
 }
 
 function Bubbles() {
@@ -64,10 +104,14 @@ function Bubbles() {
       const life = window.setTimeout(() => b.remove(), 30000);
       b.addEventListener("click", () => {
         window.clearTimeout(life);
-        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          burst(el, b);
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          b.remove();
+          return;
         }
-        b.remove();
+        burst(el, b);
+        b.classList.add("bubble-popping");
+        b.addEventListener("animationend", () => b.remove(), { once: true });
+        window.setTimeout(() => b.remove(), 350);
       });
       el.appendChild(b);
     }
@@ -162,7 +206,9 @@ function Instrument() {
 
 export function Hero() {
   const { headline, subheadline, action } = contentConfig.hero;
-  const [held, setHeld] = useState(false);
+  const exploreEnabled = agentConfig.visitorAssistant.enabled;
+  const pill =
+    "inline-flex items-center rounded-full border border-border/60 bg-bg-elevated/30 px-7 py-3.5 text-[15px] font-medium text-text-secondary backdrop-blur-md transition-colors hover:border-border hover:text-text-primary";
 
   return (
     <section className="relative flex h-dvh items-center justify-center overflow-hidden">
@@ -182,13 +228,15 @@ export function Hero() {
 
         {/* CTAs */}
         <div className="animate-fade-in-up-delay-2 mt-12 flex flex-wrap items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={() => setHeld(true)}
-            className="inline-flex items-center rounded-full border border-border/60 bg-bg-elevated/30 px-7 py-3.5 text-[15px] font-medium text-text-secondary backdrop-blur-md transition-colors hover:border-border hover:text-text-primary"
-          >
-            <span aria-live="polite">{held ? action.message : action.label}</span>
-          </button>
+          {exploreEnabled ? (
+            <Link href="/explore" className={pill}>
+              {action.label}
+            </Link>
+          ) : (
+            <button type="button" disabled className={`${pill} cursor-not-allowed opacity-60 hover:border-border/60 hover:text-text-secondary`}>
+              {action.message}
+            </button>
+          )}
         </div>
       </div>
     </section>

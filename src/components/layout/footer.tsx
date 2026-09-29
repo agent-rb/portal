@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { portalNav } from "@/lib/navigation";
 
 export function Footer() {
   return (
     <footer className="border-t border-border">
       <div className="mx-auto flex max-w-5xl flex-col gap-4 px-8 py-6 sm:flex-row sm:items-center sm:justify-between">
         <nav aria-label="Footer" className="flex flex-wrap items-center gap-x-6 gap-y-2">
-          {siteConfig.nav.map((item) => (
+          {portalNav().map((item) => (
             <Link
               key={item.href}
               href={item.href}

@@ -90,7 +90,10 @@
 }
 
 /* ── Base ──────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Keep this inside a layer so it does not cancel Tailwind spacing utilities. */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+}
 
 html {
   scroll-behavior: smooth;
@@ -152,28 +155,28 @@ body {
     inset 0 -18px 28px var(--bubble-shade);
 }
 :root .bubble[data-tone="0"] {
-  --bubble-core: rgba(28, 98, 186, 0.34);
-  --bubble-rim: rgba(18, 74, 160, 0.62);
-  --bubble-edge: rgba(16, 66, 140, 0.46);
-  --bubble-shade: rgba(12, 40, 96, 0.18);
+  --bubble-core: rgba(28, 98, 186, 0.45);
+  --bubble-rim: rgba(18, 74, 160, 0.72);
+  --bubble-edge: rgba(16, 66, 140, 0.52);
+  --bubble-shade: rgba(12, 40, 96, 0.22);
 }
 :root .bubble[data-tone="1"] {
-  --bubble-core: rgba(8, 138, 142, 0.32);
-  --bubble-rim: rgba(4, 112, 118, 0.58);
-  --bubble-edge: rgba(4, 100, 106, 0.42);
-  --bubble-shade: rgba(4, 72, 76, 0.16);
+  --bubble-core: rgba(8, 138, 142, 0.42);
+  --bubble-rim: rgba(4, 112, 118, 0.68);
+  --bubble-edge: rgba(4, 100, 106, 0.48);
+  --bubble-shade: rgba(4, 72, 76, 0.2);
 }
 :root .bubble[data-tone="2"] {
-  --bubble-core: rgba(186, 118, 18, 0.3);
-  --bubble-rim: rgba(156, 92, 8, 0.56);
-  --bubble-edge: rgba(140, 82, 8, 0.4);
-  --bubble-shade: rgba(110, 64, 8, 0.14);
+  --bubble-core: rgba(186, 118, 18, 0.4);
+  --bubble-rim: rgba(156, 92, 8, 0.66);
+  --bubble-edge: rgba(140, 82, 8, 0.46);
+  --bubble-shade: rgba(110, 64, 8, 0.18);
 }
 :root .bubble[data-tone="3"] {
-  --bubble-core: rgba(58, 66, 80, 0.26);
-  --bubble-rim: rgba(36, 42, 54, 0.52);
-  --bubble-edge: rgba(32, 38, 48, 0.38);
-  --bubble-shade: rgba(16, 20, 28, 0.14);
+  --bubble-core: rgba(58, 66, 80, 0.34);
+  --bubble-rim: rgba(36, 42, 54, 0.6);
+  --bubble-edge: rgba(32, 38, 48, 0.44);
+  --bubble-shade: rgba(16, 20, 28, 0.18);
 }
 .dark .bubble[data-tone="0"] {
   --bubble-core: rgba(70, 140, 230, 0.38);
@@ -199,6 +202,15 @@ body {
   --bubble-edge: rgba(220, 228, 242, 0.34);
   --bubble-shade: rgba(0, 0, 0, 0.48);
 }
+.bubble-popping {
+  animation: bubble-pop 0.3s ease-out forwards !important;
+  pointer-events: none;
+}
+@keyframes bubble-pop {
+  0%   { transform: scale(1); opacity: 1; }
+  30%  { transform: scale(1.25); opacity: 0.8; }
+  100% { transform: scale(0); opacity: 0; }
+}
 .splash {
   position: absolute;
   z-index: 3;
@@ -207,34 +219,68 @@ body {
   pointer-events: none;
 }
 .splash-ring,
-.splash-drop {
+.splash-drop,
+.splash-flash {
   position: absolute;
   left: 0;
   top: 0;
   border-radius: 50%;
+}
+.splash-flash {
+  margin-left: -30%;
+  margin-top: -30%;
+  background: radial-gradient(circle, var(--splash-core, var(--splash)) 0%, transparent 70%);
+  animation: splash-flash 0.4s ease-out forwards;
 }
 .splash-ring {
   width: var(--splash-size);
   height: var(--splash-size);
   margin-left: calc(var(--splash-size) / -2);
   margin-top: calc(var(--splash-size) / -2);
-  border: 1.5px solid var(--splash);
-  animation: splash-ring 0.7s ease-out forwards;
+  border: 2px solid var(--splash);
+  animation: splash-ring 0.85s ease-out forwards;
 }
 .splash-drop {
   width: 6px;
   height: 6px;
   margin: -3px 0 0 -3px;
   background: var(--splash);
-  animation: splash-drop 0.65s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  border-radius: 50%;
+  animation: splash-drop 0.8s cubic-bezier(0.15, 0.8, 0.3, 1) forwards;
+}
+@keyframes splash-flash {
+  0%   { transform: scale(0.3); opacity: 0.7; }
+  50%  { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.5); opacity: 0; }
 }
 @keyframes splash-ring {
-  0%   { transform: scale(0.4); opacity: 0.9; }
-  100% { transform: scale(7); opacity: 0; }
+  0%   { transform: scale(0.3); opacity: 1; }
+  100% { transform: scale(10); opacity: 0; }
 }
 @keyframes splash-drop {
-  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--dx), var(--dy)) scale(0.35); opacity: 0; }
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.9; }
+  60%  { opacity: 0.6; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+}
+.splash-symbol {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 800;
+  color: var(--accent);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  line-height: 1;
+  transform-origin: center;
+  animation: splash-symbol 1.2s cubic-bezier(0.12, 0.8, 0.25, 1) forwards;
+}
+.dark .splash-symbol {
+  text-shadow: 0 0 8px var(--accent), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+@keyframes splash-symbol {
+  0%   { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 1; }
+  40%  { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1.2) rotate(var(--rot)); opacity: 0; }
 }
 @keyframes bubble-float {
   0%   { opacity: 0; transform: translateY(0) scale(0.45); }
@@ -334,7 +380,10 @@ body {
   .instrument-sweep,
   .scan-line,
   .splash-ring,
-  .splash-drop { animation: none !important; }
+  .splash-drop,
+  .splash-flash,
+  .splash-symbol,
+  .bubble-popping { animation: none !important; }
   .scan-line,
   .splash { opacity: 0; }
 }

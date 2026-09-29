@@ -27,7 +27,8 @@ export const agentConfig = {
   },
   visitorAssistant: {
     enabled: true,
-    model: "openai/gpt-4o-mini",
+    // Anonymous free model (gpt-oss-20b). No API key and no charge.
+    model: "pollinations/openai",
     rateLimit: { maxRequests: 20, windowMs: 60_000 },
   },
 } as const satisfies AgentConfig;

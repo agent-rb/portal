@@ -4,12 +4,12 @@ export const siteConfig = {
   name: "AgentRB",
   domain: "agentrb.ai",
   url: "https://agentrb.ai",
-  tagline: "What if they had agents?",
-  description: "People have websites. What if they had agents?",
+  tagline: "Ask about AI agents.",
+  description: "AI agents, podcast, and blog. Ask the chat anything about building and deploying agents.",
   author: {
-    name: "AgentRB",
-    role: "",
-    bio: "",
+    name: "Raghu Ram Banda",
+    role: "AI Agent Builder",
+    bio: "Building AI agents that turn static websites into interactive experiences. Hosting the AgentRB podcast where practitioners share how they deploy AI in the real world.",
     avatar: "/images/avatar.jpg",
     social: {
       github: "https://github.com/agentrb-ai",
